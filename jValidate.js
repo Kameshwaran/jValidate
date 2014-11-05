@@ -13,16 +13,47 @@ jQuery(document).ready(function(){
 });
 
 //Custom Exception class to throw an exception when validate() is called on non-form element
-var invalidElementException = function(){}
+var InvalidElementException = function(){}
+
+//Custom Result Class
+var Result = function(status, errorMessage){
+  return {
+    "status" : status,
+    "message" : errorMessage
+  };
+}
+
+var ValidationClass = function(className, errorMessage, validationMethod, validCallback, inValidCallback, priority){
+  return {
+    "className" : className,
+    "errorMessage" : errorMessage,
+    "validationMethod" : validationMethod,
+    "validCallback" : validCallback,
+    "inValidCallback" : inValidCallback
+    "priority" : priority
+  };
+}
+
+var createValidationClasses = function(){
+  var availableValidationClasses = new Array();
+  availableValidationClasses.push(new ValidationClass("required", "This field is required"));
+  availableValidationClasses.push(new ValidationClass("minlength", "This field should have atleast chars"));
+  availableValidationClasses.push(new ValidationClass("date", "Invalid date is entered"));
+  availableValidationClasses.push(new ValidationClass("email", "Invalid email is entered"));
+  availableValidationClasses.push(new ValidationClass("time", "Invalid time is entered"));
+  availableValidationClasses.push(new ValidationClass("url", "Invalid url is entered"));
+  availableValidationClasses.push(new ValidationClass("numeric", "This field should be numeric"));
+    
+}
 
 jQuery.prototype.validate = function(){
   if ( $(this).isForm() ){
-    classesUsed = $(this).getUsedClasses();
-    inputFields = getInputFieldsFor(classesUsed);
+    var classesUsed = $(this).getUsedClasses();
+    var inputFields = getInputFieldsFor(classesUsed);
     validateEach(inputFields);
   }
   else{
-    throw new invalidElementException();
+    throw new InvalidElementException();
   }
 }
 
@@ -33,6 +64,33 @@ jQuery.prototype.isForm = function() {
 jQuery.prototype.getUsedClasses = function(){
   return select(availableValidationClasses, function(classAttr){
     return $(this).find(classAttr).length > 0;
+  });
+}
+
+jQuery.prototype.isValid = function() {
+  var classesUsed = $(this).getUsedClasses();
+  var statusAndClasses = map(classesUsed, function(classAttr){
+    var status = $(this).isSatisfied(classAttr);
+    return { 
+      "status" : status, 
+      "class"  : classAttr
+    };
+  });
+  return getResultOf(statusAndMessages);
+};
+
+var getResultOf = function(statusAndClasses){
+  var arrayOfStatus = map(statusAndClasses, function(statusAndClass){
+    return statusAndClass.status;
+  });
+  var cumulatedStatus = reduce(nestedCondition, false, arrayOfStatus);
+  return cumulatedStatus ? Result(true) : Result(false, getErrorMessageFor(statusAndClasses));
+}
+
+var validateEach = function(inputFields){
+  forEach(inputFields, function(inputField){
+    result = $(inputField).isValid();
+    result.status ? $(inputField).triggerValidCallback() : $(inputField).triggerInvalidCallback(result.message);
   });
 }
 
@@ -78,7 +136,7 @@ var select = function(array, action){
 var map = function(array, action){
   var result = new Array();
   forEach(array, function(arrayElement){
-    result.push(arrayElement);
+    result.push(action(arrayElement));
   });
   return result;
 }
