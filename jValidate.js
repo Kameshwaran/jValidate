@@ -36,10 +36,10 @@ var ValidationClass = function(className, errorMessage, validationMethod, validC
 //Creating Instances
 var createValidationClasses = function(){
 
-  var availableValidationClasses = new Array();
+  var validationInstances = new Array();
 
   // Definition for 'Required' validation.
-  availableValidationClasses.push(new ValidationClass(
+  validationInstances.push(new ValidationClass(
     "required", 
     "This field is required", 
     function( element ){
@@ -50,7 +50,7 @@ var createValidationClasses = function(){
     }, 1 ));
 
   // Definition for 'minLength' validation.
-  availableValidationClasses.push(new ValidationClass(
+  validationInstances.push(new ValidationClass(
     "minlength", 
     "This field should have atleast chars"
     function( element, minLength ){
@@ -59,7 +59,7 @@ var createValidationClasses = function(){
     }, 2 ));
 
   // Definition for 'Date' validation.
-  availableValidationClasses.push(new ValidationClass(
+  validationInstances.push(new ValidationClass(
     "date", 
     "Invalid date is entered",
     function( element ){
@@ -83,7 +83,7 @@ var createValidationClasses = function(){
     }, 2);
 
   // Definition for 'Email' validation.
-  availableValidationClasses.push(new ValidationClass(
+  validationInstances.push(new ValidationClass(
     "email", 
     "Invalid email is entered",
     function( element ){
@@ -93,7 +93,7 @@ var createValidationClasses = function(){
     }, 2));
 
   // Definition for 'Time' validation.
-  availableValidationClasses.push(new ValidationClass(
+  validationInstances.push(new ValidationClass(
     "time", 
     "Invalid time is entered",
     function( element ){
@@ -106,7 +106,7 @@ var createValidationClasses = function(){
     }, 2));
 
   // Definition for 'URL' validation.
-  availableValidationClasses.push(new ValidationClass(
+  validationInstances.push(new ValidationClass(
     "url", 
     "Invalid url is entered",
     function( element ){
@@ -121,7 +121,7 @@ var createValidationClasses = function(){
     }, 2));
 
   // Definition for 'Numeric' validation.
-  availableValidationClasses.push(new ValidationClass(
+  validationInstances.push(new ValidationClass(
     "numeric", 
     "This field should be numeric"
     function( element ){
