@@ -153,15 +153,30 @@ jQuery.prototype.getUsedClasses = function(){
 
 jQuery.prototype.isValid = function() {
   var classesUsed = $(this).getUsedClasses();
-  var statusAndClasses = map(classesUsed, function(classAttr){
-    var status = $(this).isSatisfied(classAttr);
+  var statusAndClasses = map(classesUsed, function(validationClass){
+    var status = $(this).isSatisfied(validationClass);
     return { 
       "status" : status, 
-      "class"  : classAttr
+      "class"  : validationClass
     };
   });
   return getResultOf(statusAndMessages);
 };
+
+jQuery.prototype.isSatisfied = function(className){
+  var validationInstance = findValidationClass(className);
+  var currentElement = $(this);
+  return validationInstance.validationMethod(currentElement);
+}
+
+var findValidationClass = function(className){
+  var instanceToReturn;
+  forEach(validationInstances, function(validationInstance){
+    if ( validationInstance.className == className )
+      instanceToReturn = validationInstance;
+  });
+  return instanceToReturn;
+}
 
 var getResultOf = function(statusAndClasses){
   var arrayOfStatus = map(statusAndClasses, function(statusAndClass){
