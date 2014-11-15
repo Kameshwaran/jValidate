@@ -52,7 +52,7 @@ var createValidationClasses = function(){
   // Definition for 'minLength' validation.
   validationInstances.push(new ValidationClass(
     "minlength", 
-    "This field should have atleast chars"
+    "This field should have atleast chars",
     function( element, minLength ){
       var value = $(element).val();
     	return ( value.length >= minLength );
@@ -80,7 +80,7 @@ var createValidationClasses = function(){
         }
         return false;
       }
-    }, 2);
+    }, 2));
 
   // Definition for 'Email' validation.
   validationInstances.push(new ValidationClass(
@@ -123,7 +123,7 @@ var createValidationClasses = function(){
   // Definition for 'Numeric' validation.
   validationInstances.push(new ValidationClass(
     "numeric", 
-    "This field should be numeric"
+    "This field should be numeric",
     function( element ){
       var value = $(element).val();
       return !isNaN(value);
@@ -242,3 +242,4 @@ var flatten = function(array, result){
 
   return result;
 }
+ 
