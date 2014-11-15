@@ -34,6 +34,7 @@ var ValidationClass = function(className, errorMessage, validationMethod, validC
 
 var createValidationClasses = function(){
   var availableValidationClasses = new Array();
+
   availableValidationClasses.push(new ValidationClass(
     "required", 
     "This field is required", 
@@ -43,6 +44,7 @@ var createValidationClasses = function(){
         return false;
       return value.length > 0;
     }, 1 ));
+
   availableValidationClasses.push(new ValidationClass(
     "minlength", 
     "This field should have atleast chars"
@@ -50,6 +52,7 @@ var createValidationClasses = function(){
       var value = $(element).val();
     	return ( value.length >= minLength );
     }, 2 ));
+
   availableValidationClasses.push(new ValidationClass(
     "date", 
     "Invalid date is entered",
@@ -58,20 +61,21 @@ var createValidationClasses = function(){
       var pattern = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
       var segmentedParts = value.match(pattern);
       if(segmentedParts == null)
-          return false;
+        return false;
       else{
-          var day = parseInt( segmentedParts[1] );
-          var month = parseInt( segmentedParts[2] );
-          var year = segmentedParts[3];
-          if ( day >= 1 && day <= 30 ){
-              if ( month >= 1 && month <= 12 ){
-                      if (year.length == 4)
-                          return true;
-                  }
+        var day = parseInt( segmentedParts[1] );
+        var month = parseInt( segmentedParts[2] );
+        var year = segmentedParts[3];
+        if ( day >= 1 && day <= 30 ){
+          if ( month >= 1 && month <= 12 ){
+            if (year.length == 4)
+              return true;
           }
-          return false;
+        }
+        return false;
       }
     }, 2);
+
   availableValidationClasses.push(new ValidationClass(
     "email", 
     "Invalid email is entered",
@@ -80,6 +84,7 @@ var createValidationClasses = function(){
       var emailPattern = /\S+@\S+\.\S+/;
       return email.pattern(value);
     }, 2));
+
   availableValidationClasses.push(new ValidationClass(
     "time", 
     "Invalid time is entered",
@@ -91,6 +96,7 @@ var createValidationClasses = function(){
       }
       return false;
     }, 2));
+
   availableValidationClasses.push(new ValidationClass(
     "url", 
     "Invalid url is entered",
@@ -104,6 +110,7 @@ var createValidationClasses = function(){
         return false;
       }
     }, 2));
+  
   availableValidationClasses.push(new ValidationClass(
     "numeric", 
     "This field should be numeric"
