@@ -223,6 +223,10 @@ Array.prototype.isNested = function(){
   return reduce(nestedCondition, false, this);
 }
 
+Array.prototype.first() = function(){
+  return this[0];
+}
+
 var getInputFieldsFor = function(classAttributes){
   var inputFields = map(classAttributes, function(classAttribute){
     return $( "." + classAttribute);
