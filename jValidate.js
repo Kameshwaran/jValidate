@@ -15,6 +15,7 @@ jQuery(document).ready(function(){
 //Custom Exception class to throw an exception when validate() is called on non-form element
 var InvalidElementException = function(){
   this.message = "Invalid element";
+  return this;
 }
 
 //Custom Result Class
