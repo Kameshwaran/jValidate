@@ -41,7 +41,9 @@ var createValidationClasses = function(){
   // Definition for 'Required' validation.
   validationInstances.push(new ValidationClass(
     "required", 
-    "This field is required", 
+    function(jQueryElement){
+      return "This field is required";
+    }, 
     function( element ){
       var value = $(element).val();
       if ( value == undefined )
@@ -52,7 +54,10 @@ var createValidationClasses = function(){
   // Definition for 'minLength' validation.
   validationInstances.push(new ValidationClass(
     "minlength", 
-    "This field should have atleast chars",
+    function(jQueryElement){
+      var minChars = $(jQueryElement).data("minLength");
+      return "This field must have " + minChars + " characters" ;
+    }, 
     function( element, minLength ){
       var value = $(element).val();
     	return ( value.length >= minLength );
@@ -61,7 +66,9 @@ var createValidationClasses = function(){
   // Definition for 'Date' validation.
   validationInstances.push(new ValidationClass(
     "date", 
-    "Invalid date is entered",
+    function(jQueryElement){
+      return "Date is Invalid";
+    },
     function( element ){
       var value = $(element).val();
       var pattern = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
@@ -85,7 +92,9 @@ var createValidationClasses = function(){
   // Definition for 'Email' validation.
   validationInstances.push(new ValidationClass(
     "email", 
-    "Invalid email is entered",
+    function(jQueryElement){
+      return "Email is invalid";
+    }, 
     function( element ){
       var value = $(element).val();
       var emailPattern = /\S+@\S+\.\S+/;
@@ -95,7 +104,9 @@ var createValidationClasses = function(){
   // Definition for 'Time' validation.
   validationInstances.push(new ValidationClass(
     "time", 
-    "Invalid time is entered",
+    function(jQueryElement){
+      return "Time is Invalid";
+    }
     function( element ){
       var value = $(element).val();
       var timeFormat = /^([0-9]{2})\:([0-9]{2}):([0-9]{2})$/; 
@@ -108,7 +119,9 @@ var createValidationClasses = function(){
   // Definition for 'URL' validation.
   validationInstances.push(new ValidationClass(
     "url", 
-    "Invalid url is entered",
+    function(jQueryElement){
+      return "URL is Invalid";
+    },
     function( element ){
       var value = $(element).val();
       try{
@@ -123,7 +136,9 @@ var createValidationClasses = function(){
   // Definition for 'Numeric' validation.
   validationInstances.push(new ValidationClass(
     "numeric", 
-    "This field should be numeric",
+    function(jQueryElement){
+      return "This field should be numeric";
+    }
     function( element ){
       var value = $(element).val();
       return !isNaN(value);
