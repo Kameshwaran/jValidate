@@ -95,7 +95,7 @@ var createValidationClasses = function(){
     function( element ){
       var value = $(element).val();
       var emailPattern = /\S+@\S+\.\S+/;
-      return email.pattern(value);
+      return emailPattern.test(value);
     }, 2));
 
   // Definition for 'Time' validation.
@@ -158,21 +158,23 @@ jQuery.prototype.isForm = function() {
 }
 
 jQuery.prototype.getUsedClasses = function(){
+  var currentElement = $(this);
   return select(availableValidationClasses, function(classAttr){
-    return $(this).find(classAttr).length > 0;
+    return currentElement.hasClass(classAttr);
   });
 }
 
 jQuery.prototype.isValid = function() {
-  var classesUsed = $(this).getUsedClasses();
+  var currentElement = $(this);
+  var classesUsed = currentElement.getUsedClasses();
   var resultCollection = map(classesUsed, function(validationClass){
-    var status = $(this).isSatisfied(validationClass);
+    var status = currentElement.isSatisfied(validationClass);
     return { 
       "status" : status, 
       "class"  : validationClass
     };
   });
-  return $(this).getCumulatedValidationResultOf(resultCollection);
+  return currentElement.getCumulatedValidationResultOf(resultCollection);
 };
 
 jQuery.prototype.isSatisfied = function(className){
@@ -181,12 +183,13 @@ jQuery.prototype.isSatisfied = function(className){
   return validationInstance.validationMethod(currentElement);
 }
 
-jQuery.prototype.getCumulatedValidationResult = function(resultCollection){
+jQuery.prototype.getCumulatedValidationResultOf = function(resultCollection){
   var arrayOfStatus = map(resultCollection, function(validationResult){
     return validationResult.status;
   });
-  var cumulatedStatus = reduce(nestedCondition, false, arrayOfStatus);
-  return cumulatedStatus ? Result(true) : Result(false, getErrorMessageFor($(this), resultCollection));
+  var cumulatedStatus = reduce(ANDCondition, false, arrayOfStatus);
+  var resultSet = cumulatedStatus ? new Result(true) : new Result(false, getErrorMessageFor($(this), resultCollection));
+  return resultSet; 
 }
 
 var getErrorMessageFor = function(jQueryElement, resultCollection){
@@ -199,7 +202,7 @@ var getErrorMessageFor = function(jQueryElement, resultCollection){
   var erroredValidationInstances = map(erroredValidationClassCollection, function(erroredValidationClass){
     return findValidationInstanceFor(erroredValidationClass);
   });
-  erroredValidationInstances.first().errorMessage(jQueryElement);
+  return erroredValidationInstances.first().errorMessage(jQueryElement);
 }
 
 var findValidationInstanceFor = function(className){
@@ -228,15 +231,19 @@ Array.prototype.isNested = function(){
     arrayElement.isArray();
   });
 
-  var nestedCondition = function(result1, result2){
-    return result1 || result2;
-  }
-
-  return reduce(nestedCondition, false, this);
+  return reduce(ORCondition, false, this);
 }
 
 Array.prototype.first = function(){
   return this[0];
+}
+
+var ORCondition = function(result1, result2){
+  return result1 || result2;
+}
+
+var ANDCondition = function(result1, result2){
+  return result1 && result2;
 }
 
 var getInputFieldsFor = function(classAttributes){
