@@ -1,16 +1,14 @@
-jQuery(document).ready(function(){
-  
-  var availableValidationClasses = [
-    "required",  // to check blank fields
-    "minlength", // to check the length of the fields
-    "date", // to validate a given date
-    "email", // to validate a given email
-    "time", // to validate a given time
-    "url", // to validate a given url
-    "numeric" // to check the input type is numeric or not
-  ];
+var availableValidationClasses = [
+  "required",  // to check blank fields
+  "minlength", // to check the length of the fields
+  "date", // to validate a given date
+  "email", // to validate a given email
+  "time", // to validate a given time
+  "url", // to validate a given url
+  "numeric" // to check the input type is numeric or not
+];
 
-});
+var validationInstances = new Array();
 
 //Custom Exception class to throw an exception when validate() is called on non-form element
 var InvalidElementException = function(){
@@ -36,8 +34,6 @@ var ValidationClass = function(className, errorMessage, validationMethod, validC
 
 //Creating Instances
 var createValidationClasses = function(){
-
-  var validationInstances = new Array();
 
   // Definition for 'Required' validation.
   validationInstances.push(new ValidationClass(
@@ -107,7 +103,7 @@ var createValidationClasses = function(){
     "time", 
     function(jQueryElement){
       return "Time is Invalid";
-    }
+    },
     function( element ){
       var value = $(element).val();
       var timeFormat = /^([0-9]{2})\:([0-9]{2}):([0-9]{2})$/; 
@@ -158,7 +154,7 @@ jQuery.prototype.validate = function(){
 }
 
 jQuery.prototype.isForm = function() {
-  return $(this).prop("tagName").toLowerCase == "form";
+  return $(this).prop("tagName").toLowerCase() == "form";
 }
 
 jQuery.prototype.getUsedClasses = function(){
@@ -239,7 +235,7 @@ Array.prototype.isNested = function(){
   return reduce(nestedCondition, false, this);
 }
 
-Array.prototype.first() = function(){
+Array.prototype.first = function(){
   return this[0];
 }
 
