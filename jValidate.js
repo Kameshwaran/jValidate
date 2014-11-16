@@ -202,7 +202,7 @@ var getErrorMessageFor = function(jQueryElement, resultCollection){
   var erroredValidationInstances = map(erroredValidationClassCollection, function(erroredValidationClass){
     return findValidationInstanceFor(erroredValidationClass);
   });
-  erroredValidationInstances.first.getErrorMessage(jQueryElement);
+  erroredValidationInstances.first().errorMessage(jQueryElement);
 }
 
 var findValidationInstanceFor = function(className){
