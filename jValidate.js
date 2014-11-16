@@ -153,37 +153,50 @@ jQuery.prototype.getUsedClasses = function(){
 
 jQuery.prototype.isValid = function() {
   var classesUsed = $(this).getUsedClasses();
-  var statusAndClasses = map(classesUsed, function(validationClass){
+  var resultCollection = map(classesUsed, function(validationClass){
     var status = $(this).isSatisfied(validationClass);
     return { 
       "status" : status, 
       "class"  : validationClass
     };
   });
-  return getResultOf(statusAndMessages);
+  return $(this).getCumulatedValidationResultOf(resultCollection);
 };
 
 jQuery.prototype.isSatisfied = function(className){
-  var validationInstance = findValidationClass(className);
+  var validationInstance = findValidationInstanceFor(className);
   var currentElement = $(this);
   return validationInstance.validationMethod(currentElement);
 }
 
-var findValidationClass = function(className){
+jQuery.prototype.getCumulatedValidationResult = function(resultCollection){
+  var arrayOfStatus = map(resultCollection, function(validationResult){
+    return validationResult.status;
+  });
+  var cumulatedStatus = reduce(nestedCondition, false, arrayOfStatus);
+  return cumulatedStatus ? Result(true) : Result(false, getErrorMessageFor($(this), resultCollection));
+}
+
+var getErrorMessageFor = function(jQueryElement, resultCollection){
+  var erroredResultCollection = select(resultCollection, function(result){
+    return !result.status;
+  });
+  var erroredValidationClassCollection = map(erroredResultCollection, function(erroredResult){
+    return erroredResult.class;
+  });
+  var erroredValidationInstances = map(erroredValidationClassCollection, function(erroredValidationClass){
+    return findValidationInstanceFor(erroredValidationClass);
+  });
+  erroredValidationInstances.first.getErrorMessage(jQueryElement);
+}
+
+var findValidationInstanceFor = function(className){
   var instanceToReturn;
   forEach(validationInstances, function(validationInstance){
     if ( validationInstance.className == className )
       instanceToReturn = validationInstance;
   });
   return instanceToReturn;
-}
-
-var getResultOf = function(statusAndClasses){
-  var arrayOfStatus = map(statusAndClasses, function(statusAndClass){
-    return statusAndClass.status;
-  });
-  var cumulatedStatus = reduce(nestedCondition, false, arrayOfStatus);
-  return cumulatedStatus ? Result(true) : Result(false, getErrorMessageFor(statusAndClasses));
 }
 
 var validateEach = function(inputFields){
