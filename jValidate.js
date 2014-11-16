@@ -139,7 +139,7 @@ var createValidationClasses = function(){
     "numeric", 
     function(jQueryElement){
       return "This field should be numeric";
-    }
+    },
     function( element ){
       var value = $(element).val();
       return !isNaN(value);
