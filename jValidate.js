@@ -68,8 +68,9 @@ var createValidationClasses = function(){
     },
     function( element ){
       var value = $(element).val();
-      var pattern = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
-      var segmentedParts = value.match(pattern);
+      var slashPattern = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+      var hyfendPattern = /^([0-9]{2})\-([0-9]{2})\-([0-9]{4})$/;
+      var segmentedParts = value.match(slashPattern) == null ? value.match(hyfendPattern) : value.match(slashPattern) ;
       if(segmentedParts == null)
         return false;
       else{
@@ -187,7 +188,7 @@ jQuery.prototype.getCumulatedValidationResultOf = function(resultCollection){
   var arrayOfStatus = map(resultCollection, function(validationResult){
     return validationResult.status;
   });
-  var cumulatedStatus = reduce(ANDCondition, false, arrayOfStatus);
+  var cumulatedStatus = reduce(ANDCondition, true, arrayOfStatus);
   var resultSet = cumulatedStatus ? new Result(true) : new Result(false, getErrorMessageFor($(this), resultCollection));
   return resultSet; 
 }
@@ -202,6 +203,8 @@ var getErrorMessageFor = function(jQueryElement, resultCollection){
   var erroredValidationInstances = map(erroredValidationClassCollection, function(erroredValidationClass){
     return findValidationInstanceFor(erroredValidationClass);
   });
+  if(erroredValidationInstances == null || erroredValidationInstances.isEmpty())
+      return null;
   return erroredValidationInstances.first().errorMessage(jQueryElement);
 }
 
@@ -232,6 +235,10 @@ Array.prototype.isNested = function(){
   });
 
   return reduce(ORCondition, false, this);
+}
+
+Array.prototype.isEmpty = function(){
+  return this.length == 0 ;
 }
 
 Array.prototype.first = function(){
