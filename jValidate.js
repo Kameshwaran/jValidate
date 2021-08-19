@@ -10,7 +10,7 @@ var availableValidationClasses = [
 
 var validationInstances = new Array();
 
-//Custom Exception class to throw an exception when validate() is called on non-form element
+//Custom exception class to throw an exception when validate() is called on non-form element
 var InvalidElementException = function(){
   this.message = "Invalid element";
   return this;
